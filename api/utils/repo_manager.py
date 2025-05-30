@@ -1,4 +1,40 @@
+import os
+import tempfile
+import subprocess
+from urllib.parse import urlparse
+from typing import Tuple, Optional
+
 class RepoManager:
-    def clone_repo(self, github_url: str, dest_dir: str):
-        # TODO: Implement repo cloning
-        pass
+    def clone_repo(self, github_url: str):
+        # must be a GitHub URL
+        parsed = urlparse(github_url)
+        if not (parsed.scheme in ("http", "https") and parsed.netloc == "github.com"):
+            raise ValueError("Only public GitHub URLs are supported.")
+
+        temp_dir = tempfile.mkdtemp(prefix="repo_clone_")
+        repo_name = os.path.splitext(os.path.basename(parsed.path))[0]
+        dest_path = os.path.join(temp_dir, repo_name)
+
+        try:
+            result = subprocess.run([
+                "git", "clone", "--depth", "1", github_url, dest_path
+            ], check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Git clone failed: {e.stderr}")
+
+        return dest_path
+
+    def detect_language(self, repo_path: str) -> Tuple[str, Optional[str]]:
+        # check root and first-level subdirectories for manifest files
+        candidates = [repo_path] + [os.path.join(repo_path, d) for d in os.listdir(repo_path) if os.path.isdir(os.path.join(repo_path, d))]
+        for path in candidates:
+            # python
+            for fname in ["requirements.txt", "pyproject.toml", "setup.py"]:
+                manifest = os.path.join(path, fname)
+                if os.path.isfile(manifest):
+                    return "python", path
+            # nodejs
+            manifest = os.path.join(path, "package.json")
+            if os.path.isfile(manifest):
+                return "nodejs", path
+        return "unknown", None

@@ -1,3 +1,5 @@
 fastapi
 uvicorn
-# pip-audit, osv-scanner, openai, etc. to be added later
+pip-audit
+
+#osv-scanner, openai, etc. to be added later
