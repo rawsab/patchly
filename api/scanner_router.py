@@ -13,46 +13,80 @@ class ScannerRouter:
             if os.path.isfile(req_path):
                 venv_dir = tempfile.mkdtemp(prefix="venv_")
                 try:
-                    subprocess.run([sys.executable, "-m", "venv", venv_dir], check=True) # create virtual environment
+                    try:
+                        subprocess.run([sys.executable, "-m", "venv", venv_dir], check=True, capture_output=True, text=True)
+                    except Exception as e:
+                        raise RuntimeError(f"Failed to create virtualenv: {e}")
                     python_bin = os.path.join(venv_dir, "bin", "python")
                     pip_bin = os.path.join(venv_dir, "bin", "pip")
-                    subprocess.run([python_bin, "-m", "pip", "install", "--upgrade", "pip"], check=True)
-                    subprocess.run([pip_bin, "install", "-r", req_path], check=True)
+                    try:
+                        subprocess.run([python_bin, "-m", "pip", "install", "--upgrade", "pip"], check=True, capture_output=True, text=True)
+                        subprocess.run([pip_bin, "install", "-r", req_path], check=True, capture_output=True, text=True)
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError(f"Dependency install failed: {e.stderr}")
+                    audit_bin = os.path.join(venv_dir, "bin", "pip-audit")
+                    if not os.path.isfile(audit_bin):
+                        raise RuntimeError("pip-audit is not installed in the virtual environment.")
+                    try:
+                        result = subprocess.run([
+                            audit_bin, "-r", req_path, "-f", "json"
+                        ], capture_output=True, text=True)
+                        if result.returncode != 0 and not result.stdout:
+                            raise RuntimeError(f"pip-audit failed: {result.stderr}")
+                        if result.stdout:
+                            return json.loads(result.stdout)
+                        else:
+                            raise RuntimeError(f"pip-audit returned no output: {result.stderr}")
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError(f"pip-audit failed: {e.stderr}")
+                    except json.JSONDecodeError:
+                        raise RuntimeError("pip-audit did not return valid JSON output.")
+                finally:
+                    shutil.rmtree(venv_dir, ignore_errors=True)
+            else:
+                # Fallback: run pip-audit in the repo directory (audits current environment)
+                try:
                     result = subprocess.run([
-                        os.path.join(venv_dir, "bin", "pip-audit"), "-r", req_path, "-f", "json"
-                    ], capture_output=True, text=True)
+                        "pip-audit", "-f", "json"
+                    ], cwd=repo_path, capture_output=True, text=True)
+                    if result.returncode != 0 and not result.stdout:
+                        raise RuntimeError(f"pip-audit failed: {result.stderr}")
                     if result.stdout:
                         return json.loads(result.stdout)
                     else:
-                        raise RuntimeError(f"pip-audit failed: {result.stderr}")
+                        raise RuntimeError(f"pip-audit returned no output: {result.stderr}")
+                except FileNotFoundError:
+                    raise RuntimeError("pip-audit is not installed or not found in PATH.")
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"pip-audit failed: {e.stderr}")
-                finally:
-                    shutil.rmtree(venv_dir)
-            else:
-                # Fallback: run pip-audit in the repo directory (audits current environment)
-                result = subprocess.run([
-                    "pip-audit", "-f", "json"
-                ], cwd=repo_path, capture_output=True, text=True)
-                if result.stdout:
-                    return json.loads(result.stdout)
-                else:
-                    raise RuntimeError(f"pip-audit failed: {result.stderr}")
+                except json.JSONDecodeError:
+                    raise RuntimeError("pip-audit did not return valid JSON output.")
         elif language == "nodejs":
-            # Find package.json directory
             pkg_json = os.path.join(repo_path, "package.json")
             if not os.path.isfile(pkg_json):
                 raise FileNotFoundError("package.json not found in repo.")
             try:
-                subprocess.run(["npm", "install", "--ignore-scripts"], cwd=repo_path, check=True)
-                result = subprocess.run([
-                    "npm", "audit", "--json"
-                ], cwd=repo_path, capture_output=True, text=True, check=True)
-                return json.loads(result.stdout)
-            except subprocess.CalledProcessError as e:
-                if e.stdout:
-                    return json.loads(e.stdout)
-                raise RuntimeError(f"npm audit failed: {e.stderr}")
+                try:
+                    subprocess.run(["npm", "install", "--ignore-scripts"], cwd=repo_path, check=True, capture_output=True, text=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(f"npm install failed: {e.stderr}")
+                try:
+                    result = subprocess.run([
+                        "npm", "audit", "--json"
+                    ], cwd=repo_path, capture_output=True, text=True, check=True)
+                    return json.loads(result.stdout)
+                except subprocess.CalledProcessError as e:
+                    if e.stdout:
+                        try:
+                            return json.loads(e.stdout)
+                        except json.JSONDecodeError:
+                            raise RuntimeError(f"npm audit failed and did not return valid JSON: {e.stderr}")
+                    raise RuntimeError(f"npm audit failed: {e.stderr}")
+                except json.JSONDecodeError:
+                    raise RuntimeError("npm audit did not return valid JSON output.")
+            finally:
+                # No temp dir to clean for Node.js, but placeholder for future
+                pass
         else:
             # OSV-Scanner fallback for all other languages
             # Supported lockfiles/manifests (now includes .NET, Go, Java, Ruby, PHP, Dart, etc.)
@@ -88,3 +122,5 @@ class ScannerRouter:
                 if e.stdout:
                     return json.loads(e.stdout)
                 raise RuntimeError(f"osv-scanner failed: {e.stderr}")
+            except json.JSONDecodeError:
+                raise RuntimeError("osv-scanner did not return valid JSON output.")
