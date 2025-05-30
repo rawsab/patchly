@@ -20,10 +20,10 @@ def scan_repo(request: ScanRequest):
     parser = CVEParser()
     try:
         repo_path = manager.clone_repo(request.repo_url)
-        language = manager.detect_language(repo_path)
-        if language == "unknown":
+        language, manifest_path = manager.detect_language(repo_path)
+        if language == "unknown" or not manifest_path:
             return {"repo_url": request.repo_url, "language": language, "scan_results": None, "error": "Unsupported or undetected language."}
-        scan_results = scanner.run_scan(repo_path, language)
+        scan_results = scanner.run_scan(manifest_path, language)
         normalized_results = parser.normalize(scan_results)
         return {"repo_url": request.repo_url, "language": language, "scan_results": normalized_results}
     except NotImplementedError as nie:
