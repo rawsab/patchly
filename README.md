@@ -1,29 +1,47 @@
-# Codebase Security Auditor
+# Patchly | Remote Codebase Auditor
 
-A FastAPI backend that scans GitHub repositories for vulnerable dependencies, explains CVEs using LLMs, and suggests patches. See PRD.md for details.
+A tool to audit codebases for known vulnerabilities, hassle-free.
 
-## Setup
+## Local Installation
 
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+1. Clone the repository:
+```bash
+git clone https://github.com/rawsab/patchly.git
+cd patchly
+```
 
-2. **Run the FastAPI server:**
-   ```bash
-   uvicorn api.main:app --reload
-   ```
+2. Set up the Python backend:
+```bash
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-3. **Dependency-Check via Docker:**
-   - Make sure you have Docker installed and running.
-   - The API will use the official OWASP Dependency-Check Docker image to scan repos.
+# Install dependencies
+pip install -r requirements.txt
+```
 
-## Usage
+3. Set up the frontend:
+```bash
+cd frontend
+npm install
+```
 
-- **POST** `/scan`
-  - Body: `{ "repo_url": "https://github.com/user/repo" }`
-  - Returns: JSON report of CVEs (to be implemented)
+## Running the Application
 
-## Environment Variables
+1. Start the backend server:
+```bash
+# From the root directory
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+python api/main.py
+```
 
-- See `.env.example` for future API key and token usage. 
+2. Start the frontend development server:
+```bash
+# From the frontend directory
+cd frontend
+npm run dev
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
