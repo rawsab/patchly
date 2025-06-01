@@ -1,15 +1,16 @@
-"use client";
-import React, { useState } from "react";
-import CveInfoPill from "./components/CveInfoPill";
-import HeroTitle from "./components/HeroTitle";
-import RepoScanForm from "./components/RepoScanForm";
-import ScanResultTable from "./components/ScanResultTable";
-import ErrorMessage from "./components/ErrorMessage";
+'use client';
+import React, { useState } from 'react';
+import CveInfoPill from './components/CveInfoPill';
+import HeroTitle from './components/HeroTitle';
+import RepoScanForm from './components/RepoScanForm';
+import ScanResultTable from './components/ScanResultTable';
+import ErrorMessage from './components/ErrorMessage';
+import Navbar from './components/Navbar';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export default function Home() {
-  const [repoUrl, setRepoUrl] = useState("");
+  const [repoUrl, setRepoUrl] = useState('');
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,21 +22,22 @@ export default function Home() {
     setResult(null);
     try {
       const res = await fetch(`${API_URL}/scan`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ repo_url: repoUrl }),
       });
       const data = await res.json();
       setResult(data);
     } catch (err) {
-      setError("Failed to connect to backend.");
+      setError('Failed to connect to backend.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-[#E3E7FE] text-[#202020] overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#E3E7FE] text-[#202020] overflow-x-hidden">
+      <Navbar />
       {/* Background image at the top */}
       <img
         src="/background/header_light.png"
@@ -44,8 +46,8 @@ export default function Home() {
         className="pointer-events-none select-none absolute top-0 left-0 w-full z-0"
         style={{ objectFit: 'cover' }}
       />
-      <div className="w-full max-w-3xl p-6 flex flex-col items-center justify-center mx-auto relative z-10">
-        <div className="w-full max-w-2xl mx-auto">
+      <div className="w-full max-w-[952px] p-6 flex flex-col items-center justify-center mx-auto relative z-10">
+        <div className={`w-full${!result ? ' flex flex-col justify-center min-h-[60vh]' : ''}`}>
           <CveInfoPill />
           <HeroTitle />
           <RepoScanForm
@@ -55,9 +57,8 @@ export default function Home() {
             handleSubmit={handleSubmit}
           />
           <ErrorMessage error={error} />
-          <ScanResultTable result={result} />
-          <div className="h-[50px]"></div>
         </div>
+        <ScanResultTable result={result} />
       </div>
     </div>
   );

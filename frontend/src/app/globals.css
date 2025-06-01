@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -21,7 +21,8 @@
   }
 }
 
-html, body {
+html,
+body {
   background: var(--background);
   color: #202020;
   font-family: var(--font-sans);

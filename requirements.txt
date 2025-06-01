@@ -1,5 +1,4 @@
 fastapi
 uvicorn
 pip-audit
-osv-scanner
 openai
