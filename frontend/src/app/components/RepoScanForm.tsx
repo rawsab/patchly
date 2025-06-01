@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, ArrowRight } from 'lucide-react';
+import { FaSpinner } from 'react-icons/fa';
 
 type RepoScanFormProps = {
   repoUrl: string;
@@ -29,16 +30,34 @@ export default function RepoScanForm({
           onChange={(e) => setRepoUrl(e.target.value)}
           placeholder="Enter a GitHub URL here…"
           className="flex-1 border rounded-2xl pr-32 pl-11 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 text-[#202020] bg-[#F3F5FF] border-[#D1D5E8] placeholder-[#BABCCA] text-base"
+          style={{ paddingRight: loading ? '150px' : '110px' }}
           required
         />
         <button
           type="submit"
           disabled={loading}
-          className="absolute right-1 inset-y-1 flex items-center gap-2 px-4 bg-[#C2CBFF] border border-[#C0C5E6] text-[#202020] rounded-2xl hover:bg-[#AAB8FF] disabled:opacity-50 font-semibold transition-colors cursor-pointer"
-          style={{ minWidth: 90 }}
+          className={`absolute right-1 inset-y-1 flex items-center gap-2 px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-300 ease-in-out ${
+            loading
+              ? 'bg-[#DAE0FF] border border-[#D2D5E9] w-[140px] text-[#676F9B]'
+              : 'bg-[#C2CBFF] border border-[#C0C5E6] w-[100px] text-[#202020] hover:bg-[#AAB8FF]'
+          }`}
         >
           {loading ? (
-            <span style={{ letterSpacing: '-0.025em', color: '#1F233A' }}>Scanning...</span>
+            <span
+              style={{
+                letterSpacing: '-0.025em',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <FaSpinner
+                style={{
+                  marginRight: 8,
+                  animation: 'spin 1s linear infinite',
+                }}
+              />
+              Scanning...
+            </span>
           ) : (
             <>
               <span style={{ letterSpacing: '-0.025em' }}>Scan</span>
@@ -47,6 +66,13 @@ export default function RepoScanForm({
           )}
         </button>
       </div>
+      <style jsx>{`
+        @keyframes spin {
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </form>
   );
 }

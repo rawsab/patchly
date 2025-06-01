@@ -13,10 +13,14 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 w-full z-20 bg-transparent transition-colors duration-200 ${scrolled ? 'border-b border-[#E4E7F4] bg-white/30 backdrop-blur-md shadow-md' : ''} mt-2`}
+      className={`fixed top-0 w-full z-50 transition-colors duration-200 ${
+        scrolled
+          ? 'border-b border-transparent bg-white/10 backdrop-blur-md shadow-sm'
+          : 'bg-transparent'
+      }`}
       style={{ minHeight: 64 }}
     >
-      <div className="max-w-[952px] mx-auto flex items-center justify-between px-4 py-2">
+      <div className="max-w-[952px] pt-4.5 pb-0 mx-auto flex items-center justify-between px-6">
         {/* Left side: Patchly logo and text */}
         <div className="flex items-center gap-2">
           <img src="/patchly_logo.png" alt="Patchly logo" className="h-7 w-7 object-contain" />

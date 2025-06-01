@@ -46,7 +46,7 @@ export default function Home() {
         className="pointer-events-none select-none absolute top-0 left-0 w-full z-0"
         style={{ objectFit: 'cover' }}
       />
-      <div className="w-full max-w-[952px] p-6 flex flex-col items-center justify-center mx-auto relative z-10">
+      <div className="w-full max-w-[952px] p-6 flex flex-col items-center justify-center mx-auto relative z-10 pt-20">
         <div className={`w-full${!result ? ' flex flex-col justify-center min-h-[60vh]' : ''}`}>
           <CveInfoPill />
           <HeroTitle />
@@ -56,6 +56,11 @@ export default function Home() {
             loading={loading}
             handleSubmit={handleSubmit}
           />
+          {!result && (
+            <p className="text-sm text-[#B5B5C8] text-center" style={{ letterSpacing: '-0.025em' }}>
+              Currently supports Python and NodeJS repositories.
+            </p>
+          )}
           <ErrorMessage error={error} />
         </div>
         <ScanResultTable result={result} />
