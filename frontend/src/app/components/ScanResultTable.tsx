@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  ShieldCheck,
+  ShieldAlert,
   ArrowUpRight,
   ArrowUp,
   ArrowDown,
@@ -131,7 +131,7 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
         className="text-xl font-semibold mb-3 flex items-center gap-2 justify-center"
         style={{ letterSpacing: '-0.025em', color: '#202020' }}
       >
-        <ShieldCheck size={22} className={getShieldColor(highestSeverity)} />
+        <ShieldAlert size={22} className={getShieldColor(highestSeverity)} />
         Scan Result
       </h2>
       <div className="mb-3 text-center">
