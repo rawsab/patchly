@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import CveInfoPill from './components/CveInfoPill';
 import HeroTitle from './components/HeroTitle';
 import RepoScanForm from './components/RepoScanForm';
@@ -8,6 +9,23 @@ import ErrorMessage from './components/ErrorMessage';
 import Navbar from './components/Navbar';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+const variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
+  },
+  floating: {
+    y: [0, -4, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: 'easeInOut',
+    },
+  },
+};
 
 export default function Home() {
   const [repoUrl, setRepoUrl] = useState('');
@@ -48,22 +66,57 @@ export default function Home() {
       />
       <div className="w-full max-w-[952px] p-6 flex flex-col items-center justify-center mx-auto relative z-10 pt-20">
         <div className={`w-full${!result ? ' flex flex-col justify-center min-h-[60vh]' : ''}`}>
-          <CveInfoPill />
-          <HeroTitle />
-          <RepoScanForm
-            repoUrl={repoUrl}
-            setRepoUrl={setRepoUrl}
-            loading={loading}
-            handleSubmit={handleSubmit}
-          />
+          <motion.div
+            initial="hidden"
+            animate={result || loading ? 'visible' : ['visible', 'floating']}
+            variants={variants}
+          >
+            <CveInfoPill />
+          </motion.div>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={variants}
+            transition={{ delay: 0.2 }}
+          >
+            <HeroTitle />
+          </motion.div>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={variants}
+            transition={{ delay: 0.4 }}
+          >
+            <RepoScanForm
+              repoUrl={repoUrl}
+              setRepoUrl={setRepoUrl}
+              loading={loading}
+              handleSubmit={handleSubmit}
+            />
+          </motion.div>
           {!result && (
-            <p className="text-sm text-[#B5B5C8] text-center" style={{ letterSpacing: '-0.025em' }}>
+            <motion.p
+              className="text-sm text-[#B5B5C8] text-center"
+              style={{ letterSpacing: '-0.025em' }}
+              initial="hidden"
+              animate="visible"
+              variants={variants}
+              transition={{ delay: 0.5 }}
+            >
               Currently supports Python and NodeJS repositories.
-            </p>
+            </motion.p>
           )}
           <ErrorMessage error={error} />
         </div>
-        <ScanResultTable result={result} />
+        {result && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <ScanResultTable result={result} />
+          </motion.div>
+        )}
       </div>
     </div>
   );

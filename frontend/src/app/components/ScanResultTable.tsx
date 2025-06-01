@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   ShieldAlert,
   ArrowUpRight,
@@ -22,6 +22,13 @@ type SortColumn = 'cve_id' | 'package' | 'severity' | 'description' | null;
 export default function ScanResultTable({ result }: ScanResultTableProps) {
   const [sortColumn, setSortColumn] = useState<SortColumn>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (result && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [result]);
 
   if (!result) return null;
   if (result.error) {
@@ -126,7 +133,10 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
     : [];
 
   return (
-    <div className="mt-2 mb-18 w-full flex flex-col items-center justify-center">
+    <div
+      ref={resultRef}
+      className="mt-6 mb-18 w-full flex flex-col items-center justify-center scroll-mt-26"
+    >
       <h2
         className="text-xl font-semibold mb-3 flex items-center gap-2 justify-center"
         style={{ letterSpacing: '-0.025em', color: '#202020' }}
