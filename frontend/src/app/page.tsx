@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Info } from 'lucide-react';
 import CveInfoPill from './components/CveInfoPill';
 import HeroTitle from './components/HeroTitle';
 import RepoScanForm from './components/RepoScanForm';
@@ -18,7 +19,7 @@ const variants = {
     transition: { duration: 0.5 },
   },
   floating: {
-    y: [0, -4, 0],
+    y: [0, -6, 0],
     transition: {
       duration: 3,
       repeat: Infinity,
@@ -96,13 +97,14 @@ export default function Home() {
           </motion.div>
           {!result && (
             <motion.p
-              className="text-sm text-[#B5B5C8] text-center"
+              className="text-sm text-[#B5B5C8] text-center flex items-center justify-center gap-1.5"
               style={{ letterSpacing: '-0.025em' }}
               initial="hidden"
               animate="visible"
               variants={variants}
               transition={{ delay: 0.5 }}
             >
+              <Info size={14} className="text-[#B5B5C8]" />
               Currently supports Python and NodeJS repositories.
             </motion.p>
           )}

@@ -98,3 +98,6 @@ pip-wheel-metadata/
 *.pid
 *.orig
 *.rej
+
+# Next.js environment variables
+frontend/.env.local

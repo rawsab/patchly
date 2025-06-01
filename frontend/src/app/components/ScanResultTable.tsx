@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldAlert,
   ArrowUpRight,
@@ -8,9 +9,13 @@ import {
   ChevronUp,
   ChevronDown,
   ListFilter,
+  CheckCircle2,
+  Sparkles,
+  Loader2,
 } from 'lucide-react';
 import ErrorMessage from './ErrorMessage';
 import { getSeverityWeight } from '../utils/severityMap';
+import { generateAIFix } from '../utils/aiFixGenerator';
 
 type ScanResultTableProps = {
   result: any;
@@ -19,10 +24,23 @@ type ScanResultTableProps = {
 type SortDirection = 'asc' | 'desc' | null;
 type SortColumn = 'cve_id' | 'package' | 'severity' | 'description' | null;
 
+// Cache for AI fixes
+const aiFixCache = new Map<string, { fixes: string; workarounds: string }>();
+
 export default function ScanResultTable({ result }: ScanResultTableProps) {
   const [sortColumn, setSortColumn] = useState<SortColumn>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [expandedCveId, setExpandedCveId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [aiFix, setAIFix] = useState<{ fixes: string; workarounds: string } | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+
+  // Clear cache when new scan results arrive
+  useEffect(() => {
+    if (result) {
+      aiFixCache.clear();
+    }
+  }, [result]);
 
   useEffect(() => {
     if (result && resultRef.current) {
@@ -132,6 +150,42 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
       })
     : [];
 
+  const handleSparkleClick = async (cveId: string, cveUrl: string) => {
+    if (expandedCveId === cveId) {
+      setExpandedCveId(null);
+      setAIFix(null);
+      return;
+    }
+
+    setExpandedCveId(cveId);
+
+    // Check cache first
+    const cachedFix = aiFixCache.get(cveUrl);
+    if (cachedFix) {
+      setAIFix(cachedFix);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = await generateAIFix(cveUrl);
+      // Store in cache
+      aiFixCache.set(cveUrl, result);
+      setAIFix(result);
+    } catch (error) {
+      console.error('Error generating AI fix:', error);
+      const errorResponse = {
+        fixes: 'Unable to generate fix suggestions at this time.',
+        workarounds: 'Please check the CVE details for manual workarounds.',
+      };
+      // Store error response in cache to prevent repeated failed requests
+      aiFixCache.set(cveUrl, errorResponse);
+      setAIFix(errorResponse);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       ref={resultRef}
@@ -208,93 +262,175 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                         {getSortIcon('description')}
                       </div>
                     </th>
+                    <th className="w-12"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedResults.map((vuln: any, idx: number) => (
-                    <tr key={idx} className="border-b border-gray-300 last:border-b-0">
-                      <td
-                        className="px-3 py-2 font-semibold text-blue-700 align-top"
-                        style={{
-                          minWidth: result.language === 'python' ? '170px' : '120px',
-                          maxWidth: '250px',
-                          width: 'auto',
-                        }}
+                  {sortedResults.map((vuln: any) => (
+                    <React.Fragment key={vuln.cve_id}>
+                      <tr
+                        className={expandedCveId === vuln.cve_id ? '' : 'border-b border-gray-300'}
                       >
-                        {vuln.references && vuln.references.length > 0 ? (
-                          <a
-                            href={vuln.references[0]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-blue-700 inline-flex items-center gap-1 group"
-                            style={{ textDecoration: 'none' }}
-                          >
-                            <ArrowUpRight
-                              size={16}
-                              className="mr-1 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1"
-                              color="#687BED"
-                            />
+                        <td
+                          className="px-3 py-2 font-semibold text-blue-700 align-top"
+                          style={{
+                            minWidth: result.language === 'python' ? '170px' : '120px',
+                            maxWidth: '250px',
+                            width: 'auto',
+                          }}
+                        >
+                          {vuln.references && vuln.references.length > 0 ? (
+                            <a
+                              href={vuln.references[0]}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-blue-700 inline-flex items-center gap-1 group"
+                              style={{ textDecoration: 'none' }}
+                            >
+                              <ArrowUpRight
+                                size={16}
+                                className="mr-1 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                color="#687BED"
+                              />
+                              <span
+                                style={{
+                                  fontFamily: 'IBM Plex Mono, monospace',
+                                  fontSize: '0.93em',
+                                  color: '#687BED',
+                                }}
+                              >
+                                {vuln.cve_id}
+                              </span>
+                            </a>
+                          ) : (
                             <span
                               style={{
                                 fontFamily: 'IBM Plex Mono, monospace',
                                 fontSize: '0.93em',
-                                color: '#687BED',
+                                color: '#7A86CE',
                               }}
                             >
                               {vuln.cve_id}
                             </span>
-                          </a>
-                        ) : (
-                          <span
-                            style={{
-                              fontFamily: 'IBM Plex Mono, monospace',
-                              fontSize: '0.93em',
-                              color: '#7A86CE',
-                            }}
-                          >
-                            {vuln.cve_id}
-                          </span>
-                        )}
-                      </td>
-                      <td
-                        className="px-3 py-2 align-top"
-                        style={{
-                          wordBreak: 'break-word',
-                          hyphens: 'auto',
-                          minWidth: '145px',
-                          maxWidth: '300px',
-                          whiteSpace: 'normal',
-                        }}
-                      >
-                        {vuln.package}
-                      </td>
-                      <td className="px-3 py-2 align-top min-w-[110px]">
-                        <span
-                          className={`inline-block rounded-full px-3 py-1 text-xs font-medium border
-                            ${
-                              vuln.severity === 'critical'
-                                ? 'bg-red-100 text-red-700 border-red-300'
-                                : vuln.severity === 'high'
-                                  ? 'bg-red-50 text-red-500 border-red-200'
-                                  : vuln.severity === 'moderate'
-                                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
-                                    : 'bg-gray-100 text-gray-700 border-gray-300'
-                            }
-                          `}
-                          style={{ letterSpacing: '-0.025em' }}
+                          )}
+                        </td>
+                        <td
+                          className="px-3 py-2 align-top"
+                          style={{
+                            wordBreak: 'break-word',
+                            hyphens: 'auto',
+                            minWidth: '145px',
+                            maxWidth: '300px',
+                            whiteSpace: 'normal',
+                          }}
                         >
-                          {vuln.severity}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2 text-sm align-top">{vuln.description}</td>
-                    </tr>
+                          {vuln.package}
+                        </td>
+                        <td className="px-3 py-2 align-top min-w-[110px]">
+                          <span
+                            className={`inline-block rounded-full px-3 py-1 text-xs font-medium border
+                              ${
+                                vuln.severity === 'critical'
+                                  ? 'bg-red-100 text-red-700 border-red-300'
+                                  : vuln.severity === 'high'
+                                    ? 'bg-red-50 text-red-500 border-red-200'
+                                    : vuln.severity === 'moderate'
+                                      ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                                      : 'bg-gray-100 text-gray-700 border-gray-300'
+                              }
+                            `}
+                            style={{ letterSpacing: '-0.025em' }}
+                          >
+                            {vuln.severity}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2 text-sm align-top max-w-[400px]">
+                          {vuln.description}
+                        </td>
+                        <td className="px-3 py-2 align-top">
+                          <button
+                            className={`p-1.5 rounded-lg transition-colors ${
+                              vuln.references && vuln.references.length > 0
+                                ? 'hover:bg-[#E3E7FE] cursor-pointer'
+                                : 'cursor-not-allowed opacity-40'
+                            }`}
+                            disabled={!vuln.references || vuln.references.length === 0}
+                            onClick={() => handleSparkleClick(vuln.cve_id, vuln.references[0])}
+                          >
+                            <Sparkles
+                              size={18}
+                              className={`${
+                                vuln.references && vuln.references.length > 0
+                                  ? 'text-[#687BED]'
+                                  : 'text-gray-400'
+                              }`}
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                      <AnimatePresence>
+                        {expandedCveId === vuln.cve_id && (
+                          <tr>
+                            <td colSpan={5} className="px-3 pt-0 pb-4 border-b border-gray-300">
+                              <motion.div
+                                key="expandable"
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                              >
+                                <motion.div
+                                  initial={{ y: -10, opacity: 0 }}
+                                  animate={{ y: 0, opacity: 1 }}
+                                  exit={{ y: -10, opacity: 0 }}
+                                  transition={{ delay: 0.1, duration: 0.2 }}
+                                  className="bg-white rounded-xl border border-[#D1D5E8] p-4"
+                                >
+                                  <div className="flex items-center gap-2 mb-3">
+                                    <Sparkles size={18} className="text-[#687BED]" />
+                                    <h3 className="font-semibold text-[#202020]">Fix with AI</h3>
+                                  </div>
+                                  {isLoading ? (
+                                    <div className="flex items-center gap-2 text-[#646464]">
+                                      <Loader2 size={16} className="animate-spin" />
+                                      Generating fix suggestions...
+                                    </div>
+                                  ) : aiFix ? (
+                                    <div className="space-y-3">
+                                      <div>
+                                        <h4 className="font-medium text-[#202020] mb-1">Fixes:</h4>
+                                        <p className="text-[#646464]">{aiFix.fixes}</p>
+                                      </div>
+                                      <div>
+                                        <h4 className="font-medium text-[#202020] mb-1">
+                                          Workarounds:
+                                        </h4>
+                                        <p className="text-[#646464]">{aiFix.workarounds}</p>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <p className="text-[#646464]">
+                                      Click the sparkle icon to generate AI fix suggestions.
+                                    </p>
+                                  )}
+                                </motion.div>
+                              </motion.div>
+                            </td>
+                          </tr>
+                        )}
+                      </AnimatePresence>
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
         ) : (
-          <div className="text-green-700 mt-2 text-center">No vulnerabilities found.</div>
+          <div className="text-green-700 mt-4 text-center flex items-center justify-center gap-2">
+            <CheckCircle2 size={18} />
+            No vulnerabilities found.
+          </div>
         )}
       </div>
     </div>

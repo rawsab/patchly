@@ -72,6 +72,10 @@ export default function RepoScanForm({
     if (url.includes('www.github.com')) {
       url = url.replace('www.github.com', 'github.com');
     }
+    // Add https:// if it's a github.com URL without protocol
+    if (url.startsWith('github.com/')) {
+      url = 'https://' + url;
+    }
     // If there are multiple https://, take only the first URL
     if ((url.match(/https:\/\//g) || []).length > 1) {
       url = url.split('https://')[1].split('https://')[0];
