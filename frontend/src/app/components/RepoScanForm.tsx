@@ -36,7 +36,7 @@ export default function RepoScanForm({
         <button
           type="submit"
           disabled={loading}
-          className={`absolute right-1 inset-y-1 flex items-center gap-2 px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-300 ease-in-out ${
+          className={`absolute right-1 inset-y-1 flex items-center gap-2 px-4 rounded-xl font-semibold cursor-pointer transition-all duration-300 ease-in-out ${
             loading
               ? 'bg-[#DAE0FF] border border-[#D2D5E9] w-[140px] text-[#676F9B]'
               : 'bg-[#C2CBFF] border border-[#C0C5E6] w-[100px] text-[#202020] hover:bg-[#AAB8FF]'

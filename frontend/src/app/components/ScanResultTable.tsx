@@ -10,6 +10,7 @@ import {
   ListFilter,
 } from 'lucide-react';
 import ErrorMessage from './ErrorMessage';
+import { getSeverityWeight } from '../utils/severityMap';
 
 type ScanResultTableProps = {
   result: any;
@@ -105,16 +106,18 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
         let comparison = 0;
         switch (sortColumn) {
           case 'cve_id':
-            comparison = a.cve_id.localeCompare(b.cve_id);
+            comparison = String(a.cve_id || '').localeCompare(String(b.cve_id || ''));
             break;
           case 'package':
-            comparison = a.package.localeCompare(b.package);
+            comparison = String(a.package || '').localeCompare(String(b.package || ''));
             break;
           case 'severity':
-            comparison = a.severity.localeCompare(b.severity);
+            const severityA = getSeverityWeight(String(a.severity || ''));
+            const severityB = getSeverityWeight(String(b.severity || ''));
+            comparison = severityA - severityB;
             break;
           case 'description':
-            comparison = a.description.localeCompare(b.description);
+            comparison = String(a.description || '').localeCompare(String(b.description || ''));
             break;
         }
 
