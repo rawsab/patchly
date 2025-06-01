@@ -1,12 +1,27 @@
-import React from 'react';
-import { ShieldCheck, ArrowUpRight } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  ShieldCheck,
+  ArrowUpRight,
+  ArrowUp,
+  ArrowDown,
+  Filter,
+  ChevronUp,
+  ChevronDown,
+  ListFilter,
+} from 'lucide-react';
 import ErrorMessage from './ErrorMessage';
 
 type ScanResultTableProps = {
   result: any;
 };
 
+type SortDirection = 'asc' | 'desc' | null;
+type SortColumn = 'cve_id' | 'package' | 'severity' | 'description' | null;
+
 export default function ScanResultTable({ result }: ScanResultTableProps) {
+  const [sortColumn, setSortColumn] = useState<SortColumn>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
   if (!result) return null;
   if (result.error) {
     return (
@@ -51,6 +66,62 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
     }
   };
 
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      // Toggle direction if clicking the same column
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new column and default to descending
+      setSortColumn(column);
+      setSortDirection('desc');
+    }
+  };
+
+  const getSortIcon = (column: SortColumn) => {
+    return (
+      <div className="relative w-4 h-4">
+        <div
+          className={`absolute inset-0 transition-all duration-200 ${sortColumn === column ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+        >
+          <div
+            className={`transition-transform duration-200 ${sortDirection === 'asc' ? 'rotate-0' : '-rotate-180'}`}
+          >
+            <ChevronDown size={16} />
+          </div>
+        </div>
+        <div
+          className={`absolute inset-0 transition-all duration-200 ${sortColumn === column ? 'opacity-0 scale-95' : 'opacity-40 scale-100'}`}
+        >
+          <ListFilter size={16} />
+        </div>
+      </div>
+    );
+  };
+
+  const sortedResults = result.scan_results
+    ? [...result.scan_results].sort((a, b) => {
+        if (!sortColumn || !sortDirection) return 0;
+
+        let comparison = 0;
+        switch (sortColumn) {
+          case 'cve_id':
+            comparison = a.cve_id.localeCompare(b.cve_id);
+            break;
+          case 'package':
+            comparison = a.package.localeCompare(b.package);
+            break;
+          case 'severity':
+            comparison = a.severity.localeCompare(b.severity);
+            break;
+          case 'description':
+            comparison = a.description.localeCompare(b.description);
+            break;
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+      })
+    : [];
+
   return (
     <div className="mt-2 mb-18 w-full flex flex-col items-center justify-center">
       <h2
@@ -84,18 +155,50 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                 <thead>
                   <tr className="border-b border-gray-300">
                     <th
-                      className="px-3 py-2 font-bold"
-                      style={{ minWidth: '140px', maxWidth: '250px', width: 'auto' }}
+                      className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white"
+                      style={{
+                        minWidth: result.language === 'python' ? '170px' : '120px',
+                        maxWidth: '250px',
+                        width: 'auto',
+                      }}
+                      onClick={() => handleSort('cve_id')}
                     >
-                      CVE ID
+                      <div className="flex items-center gap-2">
+                        CVE ID
+                        {getSortIcon('cve_id')}
+                      </div>
                     </th>
-                    <th className="px-3 py-2 font-bold">Package</th>
-                    <th className="px-3 py-2 font-bold min-w-[110px]">Severity</th>
-                    <th className="px-3 py-2 font-bold">Description</th>
+                    <th
+                      className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white"
+                      onClick={() => handleSort('package')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Package
+                        {getSortIcon('package')}
+                      </div>
+                    </th>
+                    <th
+                      className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white min-w-[110px]"
+                      onClick={() => handleSort('severity')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Severity
+                        {getSortIcon('severity')}
+                      </div>
+                    </th>
+                    <th
+                      className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white"
+                      onClick={() => handleSort('description')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Description
+                        {getSortIcon('description')}
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {result.scan_results.map((vuln: any, idx: number) => (
+                  {sortedResults.map((vuln: any, idx: number) => (
                     <tr key={idx} className="border-b border-gray-300 last:border-b-0">
                       <td
                         className="px-3 py-2 font-semibold text-blue-700 align-top"

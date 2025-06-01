@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function CveInfoPill() {
   return (
-    <div className="flex justify-center mb-14 mt-0 pt-10">
+    <div className="flex justify-center mb-16 mt-6 pt-10">
       <span
         className="inline-flex items-center gap-2 px-4 py-1 border rounded-full text-sm font-bold transition-all duration-200 cursor-pointer cve-pill"
         style={{
