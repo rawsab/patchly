@@ -25,8 +25,8 @@ class ScannerRouter:
                     except subprocess.CalledProcessError as e:
                         raise RuntimeError(f"Dependency install failed: {e.stderr}")
                     
-                    # Ensure pip-audit is installed in the scan venv
-                    subprocess.run([pip_bin, "install", "pip-audit"], check=True, capture_output=True, text=True)
+                    # Ensure pip-audit and web scraping dependencies are installed in the scan venv
+                    subprocess.run([pip_bin, "install", "pip-audit", "requests", "beautifulsoup4"], check=True, capture_output=True, text=True)
                     audit_bin = os.path.join(venv_dir, "bin", "pip-audit")
                     if not os.path.isfile(audit_bin):
                         raise RuntimeError("pip-audit is not installed in the virtual environment.")
