@@ -2,7 +2,7 @@
 
 A tool to audit codebases for known vulnerabilities, hassle-free.
 
-![Patchly](https://github.com/user-attachments/assets/ce8ac47a-5a5d-4851-bce3-7411c15f74fa)
+![PatchlyDemo](https://github.com/user-attachments/assets/193ed58d-b57c-47c6-894f-50838a5c9c8f)
 
 ## Local Installation
 
