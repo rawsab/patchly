@@ -1,19 +1,30 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(request: Request) {
   try {
-    const { cveUrl } = await request.json();
+    const { cveUrl, apiKey } = await request.json();
+
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          fixes: 'API key not found. Please add your OpenAI API key.',
+          workarounds: 'Please check the CVE details for manual workarounds.',
+        },
+        { status: 401 },
+      );
+    }
+
+    const openai = new OpenAI({
+      apiKey,
+    });
 
     // Fetch the CVE content on the server side
     const cveResponse = await fetch(cveUrl);
     const html = await cveResponse.text();
 
-    // Extract text content (you might want to use a proper HTML parser here)
+    // Extract text content
+    // TODO: use a proper HTML parser
     const content = html
       .replace(/<[^>]*>/g, ' ')
       .replace(/\s+/g, ' ')

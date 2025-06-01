@@ -10,6 +10,14 @@ import ErrorMessage from './components/ErrorMessage';
 import Navbar from './components/Navbar';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const SCAN_CACHE_KEY = 'scan_results_cache';
+
+type ScanCache = {
+  [url: string]: {
+    timestamp: number;
+    result: any;
+  };
+};
 
 const variants = {
   hidden: { opacity: 0, y: 10 },
@@ -39,7 +47,27 @@ export default function Home() {
     setLoading(true);
     setError(null);
     setResult(null);
+
     try {
+      // Check cache first
+      const cachedScans = sessionStorage.getItem(SCAN_CACHE_KEY);
+      if (cachedScans) {
+        const scanCache: ScanCache = JSON.parse(cachedScans);
+        const cachedResult = scanCache[repoUrl];
+
+        if (cachedResult) {
+          // Check if cache is still valid (less than 24 hours old)
+          const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+          if (cachedResult.timestamp > oneDayAgo) {
+            console.log('Using cached scan result');
+            setResult(cachedResult.result);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
+      // If no cache or expired, make API call
       const res = await fetch(`${API_URL}/scan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,6 +75,27 @@ export default function Home() {
       });
       const data = await res.json();
       setResult(data);
+
+      // Save to cache
+      try {
+        const scanCache: ScanCache = cachedScans ? JSON.parse(cachedScans) : {};
+        scanCache[repoUrl] = {
+          timestamp: Date.now(),
+          result: data,
+        };
+
+        // Clean up old entries (older than 24 hours)
+        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+        Object.entries(scanCache).forEach(([url, data]) => {
+          if (data.timestamp < oneDayAgo) {
+            delete scanCache[url];
+          }
+        });
+
+        sessionStorage.setItem(SCAN_CACHE_KEY, JSON.stringify(scanCache));
+      } catch (error) {
+        console.error('Error saving scan results to cache:', error);
+      }
     } catch (err) {
       setError('Failed to connect to backend.');
     } finally {
