@@ -11,7 +11,7 @@ app.add_middleware(
     # "http://localhost:5173",
     # "http://localhost:3000",
     # ],
-    allow_origins=["*"],
+    allow_origins=["https://patchly-nu.vercel.app"],
     # allow_origin_regex=r"https:\/\/patchly-[a-zA-Z0-9-]+\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
