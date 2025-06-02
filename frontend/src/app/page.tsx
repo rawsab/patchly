@@ -144,7 +144,7 @@ export default function Home() {
               handleSubmit={handleSubmit}
             />
           </motion.div>
-          {!result && (
+          {!result && !error && (
             <motion.p
               className="text-sm text-[#B5B5C8] text-center flex items-center justify-center gap-1.5"
               style={{ letterSpacing: '-0.025em' }}
