@@ -1,8 +1,17 @@
-# Patchly | Remote Codebase Auditor
-
-A tool to audit codebases for known vulnerabilities, hassle-free.
+# Patchly
 
 ![Patchly_Demo](https://github.com/user-attachments/assets/7cd6c59d-74a4-47ed-a9cf-95aa34ec160b)
+
+## About this Project
+
+Patchly is an AI-augmented vulnerability scanner that analyzes public GitHub repositories for known security issues in real-time. Built for new developers, early-stage prototyping, and educational purposes, Patchly automates the end-to-end process of dependency scanning, CVE detection, and fix recommendation by leveraging the latest CVE databases and LLM technology.
+
+### Features
+- Real-time framework based vulnerability scanning
+- Context-aware fix generation using GPT-4
+- Simple and interactive CVE dashboard with filters
+- Fully automated repo cloning and clean up
+- Rate limiting and cache management
 
 ## Live Demo
 
