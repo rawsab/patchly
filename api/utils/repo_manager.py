@@ -17,15 +17,9 @@ class RepoManager:
         dest_path = os.path.join(temp_dir, repo_name)
 
         try:
-            # Use --no-checkout to speed up cloning and avoid authentication issues
             result = subprocess.run([
-                "git", "clone", "--depth", "1", "--no-checkout", github_url, dest_path
+                "git", "clone", "--depth", "1", github_url, dest_path
             ], check=True, capture_output=True, text=True)
-            
-            # Now checkout only what we need
-            subprocess.run([
-                "git", "checkout", "HEAD", "--", "requirements.txt", "package.json", "pyproject.toml", "setup.py"
-            ], cwd=dest_path, check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"Git clone failed: {e.stderr}")
 
