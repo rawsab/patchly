@@ -1,13 +1,5 @@
 .env
 
-# frontend
-/frontend/node_modules
-/frontend/.next
-/frontend/out
-/frontend/build
-/frontend/.vercel
-/frontend/next-env.d.ts
-
 # python
 __pycache__/
 *.py[cod]
@@ -98,6 +90,3 @@ pip-wheel-metadata/
 *.pid
 *.orig
 *.rej
-
-# Next.js environment variables
-frontend/.env.local
