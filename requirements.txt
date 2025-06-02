@@ -2,3 +2,4 @@ fastapi
 uvicorn
 pip-audit
 openai
+beautifulsoup4
