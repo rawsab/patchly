@@ -97,7 +97,7 @@ export default function Home() {
         console.error('Error saving scan results to cache:', error);
       }
     } catch (err) {
-      setError('Failed to connect to backend.');
+      setError('Failed to connect to backend. Please try again in a few minutes.');
     } finally {
       setLoading(false);
     }
