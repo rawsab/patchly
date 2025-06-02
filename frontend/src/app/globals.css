@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
@@ -7,6 +10,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-mono: var(--font-geist-mono);
+  --background-color: #e3e7fe;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,7 +22,10 @@
 
 html,
 body {
-  background: var(--background);
+  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #e3e7fe 50%, #e3e7fe 100%);
   color: #202020;
   font-family: var(--font-sans);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
