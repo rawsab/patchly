@@ -2,7 +2,10 @@
 
 A tool to audit codebases for known vulnerabilities, hassle-free.
 
-![PatchlyDemo](https://github.com/user-attachments/assets/193ed58d-b57c-47c6-894f-50838a5c9c8f)
+![Patchly_Demo](https://github.com/user-attachments/assets/7cd6c59d-74a4-47ed-a9cf-95aa34ec160b)
+
+## Live Demo
+[patchly-nu.vercel.app](patchly-nu.vercel.app)
 
 ## Local Installation
 
