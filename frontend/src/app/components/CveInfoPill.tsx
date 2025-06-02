@@ -18,8 +18,13 @@ export default function CveInfoPill() {
           href="https://www.redhat.com/en/topics/security/what-is-cve"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-blue-700"
-          style={{ color: 'inherit', textDecoration: 'none' }}
+          className="hover:text-blue-700 text-center"
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
           What are Common Vulnerabilities and Exposures (CVEs)?
         </a>
