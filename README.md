@@ -70,3 +70,10 @@ The application will be available at:
 
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
+
+
+## Planned Features
+
+- Deep scanning option with OWASP Dependency Check
+- Extended support for C/C++, Dart, PHP, Rust, Ruby
+- Generating command line batch fixes
