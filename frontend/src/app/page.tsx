@@ -169,7 +169,7 @@ export default function Home() {
               transition={{ delay: 0.5 }}
             >
               <Info size={14} className="text-[#B5B5C8]" />
-              Currently supports Python and NodeJS repositories.
+              Currently supports Python, Go, Java, NodeJS and .NET repositories.
             </motion.p>
           )}
           <ErrorMessage error={error} />
