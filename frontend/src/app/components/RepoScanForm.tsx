@@ -82,6 +82,11 @@ export default function RepoScanForm({
   const [isTyping, setIsTyping] = useState(false);
   const typewriterTimeout = useRef<NodeJS.Timeout | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let url = e.target.value;
@@ -223,13 +228,14 @@ export default function RepoScanForm({
               }}
             />
           </button>
-          {/* Tooltip: only rendered when hovered */}
-          {isHelpHovered && (
-            <div className="help-tooltip visible">
-              See Example
-              <span className="help-tooltip-arrow" />
-            </div>
-          )}
+          {/* Tooltip: always rendered, fades in/out with opacity transition */}
+          <div
+            className={`help-tooltip${isHelpHovered ? ' visible' : ''}${mounted ? ' mounted' : ''}`}
+            aria-hidden={!isHelpHovered}
+          >
+            See Example
+            <span className="help-tooltip-arrow" />
+          </div>
         </div>
       </div>
       {/* Error message below the row */}
@@ -268,6 +274,9 @@ export default function RepoScanForm({
           align-items: center;
           opacity: 0;
           pointer-events: none;
+          transition: none;
+        }
+        .help-tooltip.mounted {
           transition:
             opacity 0.25s,
             transform 0.25s;
