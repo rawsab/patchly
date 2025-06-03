@@ -1,0 +1,286 @@
+{
+  "repo_url": "https://github.com/vulnerable-apps/vulnerable-rest-api",
+  "language": "nodejs",
+  "scan_results": [
+    {
+      "cve_id": 1104001,
+      "package": "@babel/helpers",
+      "version": null,
+      "severity": "moderate",
+      "description": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
+      "references": ["https://github.com/advisories/GHSA-968p-4wvh-cqc8"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1104000,
+      "package": "@babel/runtime",
+      "version": null,
+      "severity": "moderate",
+      "description": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
+      "references": ["https://github.com/advisories/GHSA-968p-4wvh-cqc8"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1096886,
+      "package": "@babel/traverse",
+      "version": null,
+      "severity": "critical",
+      "description": "Babel vulnerable to arbitrary code execution when compiling specifically crafted malicious code",
+      "references": ["https://github.com/advisories/GHSA-67hx-6x53-jw92"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1099520,
+      "package": "body-parser",
+      "version": null,
+      "severity": "high",
+      "description": "body-parser vulnerable to denial of service when url encoding is enabled",
+      "references": ["https://github.com/advisories/GHSA-qwcr-r2fm-qrc7"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1098094,
+      "package": "braces",
+      "version": null,
+      "severity": "high",
+      "description": "Uncontrolled resource consumption in braces",
+      "references": ["https://github.com/advisories/GHSA-grv7-fg5c-xmjg"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1103907,
+      "package": "cookie",
+      "version": null,
+      "severity": "low",
+      "description": "cookie accepts cookie name, path, and domain with out of bounds characters",
+      "references": ["https://github.com/advisories/GHSA-pxg6-pf52-xh8x"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1104664,
+      "package": "cross-spawn",
+      "version": null,
+      "severity": "high",
+      "description": "Regular Expression Denial of Service (ReDoS) in cross-spawn",
+      "references": ["https://github.com/advisories/GHSA-3xgq-45jj-v275"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1096820,
+      "package": "express",
+      "version": null,
+      "severity": "moderate",
+      "description": "Express.js Open Redirect in malformed URLs",
+      "references": ["https://github.com/advisories/GHSA-rv95-896h-c2vc"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1100530,
+      "package": "express",
+      "version": null,
+      "severity": "low",
+      "description": "express vulnerable to XSS via response.redirect()",
+      "references": ["https://github.com/advisories/GHSA-qw6h-vgh9-j6wx"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1105074,
+      "package": "formidable",
+      "version": null,
+      "severity": "low",
+      "description": "Formidable relies on hexoid to prevent guessing of filenames for untrusted executable content",
+      "references": ["https://github.com/advisories/GHSA-75v8-2h7p-7m2m"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1097721,
+      "package": "ip",
+      "version": null,
+      "severity": "low",
+      "description": "NPM IP package incorrectly identifies some private IP addresses as public",
+      "references": ["https://github.com/advisories/GHSA-78xj-cgh5-2h22"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1101851,
+      "package": "ip",
+      "version": null,
+      "severity": "high",
+      "description": "ip SSRF improper categorization in isPublic",
+      "references": ["https://github.com/advisories/GHSA-2p57-rm9w-gvfp"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1097690,
+      "package": "jsonwebtoken",
+      "version": null,
+      "severity": "high",
+      "description": "jsonwebtoken unrestricted key type could lead to legacy keys usage ",
+      "references": ["https://github.com/advisories/GHSA-8cf7-32gw-wr33"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1097694,
+      "package": "jsonwebtoken",
+      "version": null,
+      "severity": "moderate",
+      "description": "jsonwebtoken's insecure implementation of key retrieval function could lead to Forgeable Public/Private Tokens from RSA to HMAC",
+      "references": ["https://github.com/advisories/GHSA-hjrf-2m68-5959"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1102458,
+      "package": "jsonwebtoken",
+      "version": null,
+      "severity": "moderate",
+      "description": "jsonwebtoken vulnerable to signature validation bypass due to insecure default algorithm in jwt.verify()",
+      "references": ["https://github.com/advisories/GHSA-qwph-4952-7xr6"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1098681,
+      "package": "micromatch",
+      "version": null,
+      "severity": "moderate",
+      "description": "Regular Expression Denial of Service (ReDoS) in micromatch",
+      "references": ["https://github.com/advisories/GHSA-952p-6rrq-rcjv"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1102447,
+      "package": "mongodb",
+      "version": null,
+      "severity": "moderate",
+      "description": "MongoDB Driver may publish events containing authentication-related data",
+      "references": ["https://github.com/advisories/GHSA-vxvm-qww3-2fh7"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1095082,
+      "package": "mongoose",
+      "version": null,
+      "severity": "critical",
+      "description": "Mongoose Prototype Pollution vulnerability",
+      "references": ["https://github.com/advisories/GHSA-9m93-w8w6-76hh"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1101062,
+      "package": "mongoose",
+      "version": null,
+      "severity": "high",
+      "description": "Mongoose search injection vulnerability",
+      "references": ["https://github.com/advisories/GHSA-m7xq-9374-9rvx"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1101839,
+      "package": "mongoose",
+      "version": null,
+      "severity": "critical",
+      "description": "Mongoose search injection vulnerability",
+      "references": ["https://github.com/advisories/GHSA-vg7j-7cwx-8wgw"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1096366,
+      "package": "nodemailer",
+      "version": null,
+      "severity": "moderate",
+      "description": "nodemailer ReDoS when trying to send a specially crafted email",
+      "references": ["https://github.com/advisories/GHSA-9h6g-pr28-7cqp"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1101844,
+      "package": "path-to-regexp",
+      "version": null,
+      "severity": "high",
+      "description": "Unpatched `path-to-regexp` ReDoS in 0.1.x",
+      "references": ["https://github.com/advisories/GHSA-rhx6-c78j-4q9w"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1101850,
+      "package": "path-to-regexp",
+      "version": null,
+      "severity": "high",
+      "description": "path-to-regexp outputs backtracking regular expressions",
+      "references": ["https://github.com/advisories/GHSA-9wv6-86v2-598j"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1101089,
+      "package": "semver",
+      "version": null,
+      "severity": "high",
+      "description": "semver vulnerable to Regular Expression Denial of Service",
+      "references": ["https://github.com/advisories/GHSA-c2qf-rxjj-qqgw"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1101090,
+      "package": "semver",
+      "version": null,
+      "severity": "high",
+      "description": "semver vulnerable to Regular Expression Denial of Service",
+      "references": ["https://github.com/advisories/GHSA-c2qf-rxjj-qqgw"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1100526,
+      "package": "send",
+      "version": null,
+      "severity": "low",
+      "description": "send vulnerable to template injection that can lead to XSS",
+      "references": ["https://github.com/advisories/GHSA-m6fv-jmcg-4jfg"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1100528,
+      "package": "serve-static",
+      "version": null,
+      "severity": "low",
+      "description": "serve-static vulnerable to template injection that can lead to XSS",
+      "references": ["https://github.com/advisories/GHSA-cm22-4g7w-348p"],
+      "aliases": [],
+      "fix_versions": []
+    },
+    {
+      "cve_id": 1097493,
+      "package": "tar",
+      "version": null,
+      "severity": "moderate",
+      "description": "Denial of service while parsing a tar file due to lack of folders count validation",
+      "references": ["https://github.com/advisories/GHSA-f5x3-32g6-xq36"],
+      "aliases": [],
+      "fix_versions": []
+    }
+  ]
+}

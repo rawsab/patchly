@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import CveInfoPill from './components/CveInfoPill';
@@ -41,6 +41,7 @@ export default function Home() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const exampleDelayRef = useRef(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,9 +61,20 @@ export default function Home() {
           const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
           if (cachedResult.timestamp > oneDayAgo) {
             console.log('Using cached scan result');
-            setResult(cachedResult.result);
-            setLoading(false);
-            return;
+            if (repoUrl === 'https://github.com/vulnerable-apps/vulnerable-rest-api') {
+              exampleDelayRef.current = true;
+              // Simulate a scan delay for the example repo
+              setTimeout(() => {
+                setResult(cachedResult.result);
+                setLoading(false);
+                exampleDelayRef.current = false;
+              }, 2000); // 2 seconds delay
+              return;
+            } else {
+              setResult(cachedResult.result);
+              setLoading(false);
+              return;
+            }
           }
         }
       }
@@ -99,7 +111,10 @@ export default function Home() {
     } catch (err) {
       setError('Failed to connect to backend. Please try again in a few minutes.');
     } finally {
-      setLoading(false);
+      // Only set loading to false if not in the example delay
+      if (!exampleDelayRef.current) {
+        setLoading(false);
+      }
     }
   };
 

@@ -55,6 +55,21 @@ const isValidGithubUrl = (url: string): boolean => {
 };
 
 const EXAMPLE_URL = 'https://github.com/vulnerable-apps/vulnerable-rest-api';
+const SCAN_CACHE_KEY = 'scan_results_cache';
+
+// Inject the example scan result into sessionStorage cache
+async function injectExampleResult() {
+  const cachedScans = sessionStorage.getItem(SCAN_CACHE_KEY);
+  const scanCache = cachedScans ? JSON.parse(cachedScans) : {};
+  if (scanCache[EXAMPLE_URL]) return; // Already cached
+  const res = await fetch('/example_scan_result.json');
+  const data = await res.json();
+  scanCache[EXAMPLE_URL] = {
+    timestamp: Date.now(),
+    result: data,
+  };
+  sessionStorage.setItem(SCAN_CACHE_KEY, JSON.stringify(scanCache));
+}
 
 export default function RepoScanForm({
   repoUrl,
@@ -95,11 +110,12 @@ export default function RepoScanForm({
   };
 
   // Typewriter effect for example URL
-  const handleExampleClick = () => {
+  const handleExampleClick = async () => {
     if (isTyping || loading) return;
     setIsTyping(true);
     setRepoUrl('');
     setIsInvalid(false);
+    await injectExampleResult();
     let i = 0;
     const type = () => {
       setRepoUrl(EXAMPLE_URL.slice(0, i));
