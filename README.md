@@ -2,6 +2,11 @@
 
 ![Patchly_Demo](https://github.com/user-attachments/assets/7cd6c59d-74a4-47ed-a9cf-95aa34ec160b)
 
+## Live Demo
+
+[patchly-nu.vercel.app](patchly-nu.vercel.app)
+
+
 ## About this Project
 
 Patchly is an AI-augmented vulnerability scanner that analyzes public GitHub repositories for known security issues in real-time. Built for new developers, early-stage prototyping, and educational purposes, Patchly automates the end-to-end process of dependency scanning, CVE detection, and fix recommendation by leveraging the latest CVE databases and LLM technology.
@@ -13,9 +18,8 @@ Patchly is an AI-augmented vulnerability scanner that analyzes public GitHub rep
 - Fully automated repo cloning and clean up
 - Rate limiting and cache management
 
-## Live Demo
-
-[patchly-nu.vercel.app](patchly-nu.vercel.app)
+### Technologies
+Built with FastAPI (Python) for backend scanning logic and dependency parsing, and Next.js (React, TypeScript, TailwindCSS) for an interactive frontend interface. Project deployed on Vercel + Render.
 
 ## Local Installation
 
