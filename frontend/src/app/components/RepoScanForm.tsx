@@ -207,11 +207,13 @@ export default function RepoScanForm({
               }}
             />
           </button>
-          {/* Tooltip: always rendered, fades in/out */}
-          <div className={`help-tooltip${isHelpHovered ? ' visible' : ''}`}>
-            See Example
-            <span className="help-tooltip-arrow" />
-          </div>
+          {/* Tooltip: only rendered when hovered */}
+          {isHelpHovered && (
+            <div className="help-tooltip visible">
+              See Example
+              <span className="help-tooltip-arrow" />
+            </div>
+          )}
         </div>
       </div>
       {/* Error message below the row */}
