@@ -16,7 +16,7 @@ Patchly is an AI-augmented vulnerability scanner that analyzes public GitHub rep
 - Context-aware fix generation using GPT-4
 - Simple and interactive CVE dashboard with filters
 - Fully automated repo cloning and clean up
-- Rate limiting and cache management
+- CORS handling, rate limiting and cache management
 
 ### Technologies
 Built with FastAPI (Python) for backend scanning logic and dependency parsing, and Next.js (React, TypeScript, TailwindCSS) for an interactive frontend interface. Project deployed on Vercel + Render.
