@@ -58,7 +58,7 @@ npm install
 ```bash
 # From the root directory
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-python api/main.py
+uvicorn api.main:app --reload
 ```
 
 2. Start the frontend development server:
