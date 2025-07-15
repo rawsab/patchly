@@ -80,3 +80,4 @@ The application will be available at:
 - Deep scanning option with OWASP Dependency Check
 - Extended support for C/C++, Dart, PHP, Rust, Ruby
 - Generating command line batch fixes
+- Adaptive UI (for mobile devices)
