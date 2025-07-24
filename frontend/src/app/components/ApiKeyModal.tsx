@@ -1,3 +1,8 @@
+// Patchly - Detects security issues in GitHub repos.
+// Copyright (C) 2025  Rawsab Said
+// This file is part of Patchly and is licensed under the
+// GNU General Public License v3.0. See LICENSE for details.
+
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
