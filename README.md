@@ -21,7 +21,9 @@ Built with Python & FastAPI for backend scanning logic and dependency parsing, a
 
 ## Try It Out!
 
-[patchly-nu.vercel.app](patchly-nu.vercel.app)
+[patchly.rawsab.com](https://patchly.rawsab.com/)
+
+<!-- [patchly-nu.vercel.app](patchly-nu.vercel.app) -->
 
 
 ## Local Installation
