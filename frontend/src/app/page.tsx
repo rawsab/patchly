@@ -4,7 +4,7 @@
 // GNU General Public License v3.0. See LICENSE for details.
 
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import CveInfoPill from './components/CveInfoPill';
@@ -46,7 +46,47 @@ export default function Home() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const exampleDelayRef = useRef(false);
+
+  // Check for dark mode on mount and listen for changes
+  useEffect(() => {
+    const updateDarkMode = () => {
+      const savedDarkMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedDarkMode !== null) {
+        setIsDarkMode(savedDarkMode === 'true');
+      } else {
+        setIsDarkMode(prefersDark);
+      }
+    };
+
+    // Initial check
+    updateDarkMode();
+
+    // Listen for storage changes (when dark mode is toggled in Navbar)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'darkMode') {
+        updateDarkMode();
+      }
+    };
+
+    // Listen for localStorage changes
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom events (for same-tab changes)
+    const handleDarkModeChange = () => {
+      updateDarkMode();
+    };
+
+    window.addEventListener('darkModeChange', handleDarkModeChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('darkModeChange', handleDarkModeChange);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,11 +164,11 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#E3E7FE] text-[#202020] overflow-x-hidden">
+    <div className="relative min-h-screen overflow-x-hidden transition-colors duration-200" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-primary)' }}>
       <Navbar />
       {/* Background image at the top */}
       <img
-        src="/background/header_light.png"
+        src={isDarkMode ? "/background/header_dark.png" : "/background/header_light.png"}
         alt=""
         aria-hidden
         className="pointer-events-none select-none absolute top-0 left-0 w-full z-0"
@@ -166,14 +206,17 @@ export default function Home() {
           </motion.div>
           {!result && !error && (
             <motion.p
-              className="text-sm text-[#B5B5C8] text-center flex items-center justify-center gap-1.5"
-              style={{ letterSpacing: '-0.025em' }}
+              className="text-sm text-center flex items-center justify-center gap-1.5 transition-colors duration-200"
+              style={{ 
+                letterSpacing: '-0.025em',
+                color: 'var(--text-muted)'
+              }}
               initial="hidden"
               animate="visible"
               variants={variants}
               transition={{ delay: 0.5 }}
             >
-              <Info size={14} className="text-[#B5B5C8]" />
+              <Info size={14} style={{ color: 'var(--text-muted)' }} />
               Currently supports Python, Go, Java, NodeJS and .NET repositories.
             </motion.p>
           )}

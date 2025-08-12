@@ -5,11 +5,11 @@ export default function CveInfoPill() {
   return (
     <div className="flex justify-center mb-16 mt-6 pt-10">
       <span
-        className="inline-flex items-center gap-2 px-4 py-1 border rounded-full text-sm font-bold transition-all duration-200 cursor-pointer cve-pill"
+        className="inline-flex items-center gap-2 px-4 py-1 border rounded-full text-sm font-bold transition-all duration-200 cursor-pointer cve-pill opacity-75"
         style={{
-          color: '#212121',
-          background: 'rgba(205, 209, 221, 0.3)',
-          borderColor: 'rgba(175, 175, 175, 0.3)',
+          color: 'var(--text-primary)',
+          background: 'var(--card-bg)',
+          borderColor: 'var(--card-border)',
           letterSpacing: '-0.025em',
         }}
         tabIndex={0}
@@ -18,7 +18,7 @@ export default function CveInfoPill() {
           href="https://www.redhat.com/en/topics/security/what-is-cve"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-blue-700 text-center"
+          className="hover:text-blue-700 text-center transition-colors duration-200"
           style={{
             color: 'inherit',
             textDecoration: 'none',
@@ -28,7 +28,7 @@ export default function CveInfoPill() {
         >
           What are Common Vulnerabilities and Exposures (CVEs)?
         </a>
-        <ArrowRight size={16} color="#989AA1" />
+        <ArrowRight size={16} style={{ color: 'var(--text-secondary)' }} />
       </span>
       <style jsx>{`
         .cve-pill:hover,

@@ -50,8 +50,12 @@ export default function ApiKeyModal({ isOpen, onClose, onSave }: ApiKeyModalProp
             className="fixed inset-0 z-[100000] flex items-center justify-center"
           >
             <div
-              className="relative bg-white rounded-2xl p-6 w-full max-w-md mx-4 border border-[#D1D5E8]"
-              style={{ letterSpacing: '-0.025em' }}
+              className="relative rounded-2xl p-6 w-full max-w-md mx-4 border transition-colors duration-200"
+              style={{ 
+                letterSpacing: '-0.025em',
+                backgroundColor: 'var(--card-bg)',
+                borderColor: 'var(--card-border)'
+              }}
             >
               <button
                 onClick={onClose}
@@ -60,11 +64,11 @@ export default function ApiKeyModal({ isOpen, onClose, onSave }: ApiKeyModalProp
                 <X size={20} className="text-gray-500" />
               </button>
 
-              <h2 className="text-xl font-semibold mb-2 text-[#202020]">Add API Key</h2>
+              <h2 className="text-xl font-semibold mb-2 transition-colors duration-200" style={{ color: 'var(--text-primary)' }}>Add API Key</h2>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="apiKey" className="block text-sm font-medium mb-2 transition-colors duration-200" style={{ color: 'var(--text-secondary)' }}>
                     Enter your OpenAI API Key
                   </label>
                   <input
@@ -72,7 +76,12 @@ export default function ApiKeyModal({ isOpen, onClose, onSave }: ApiKeyModalProp
                     id="apiKey"
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
-                    className="w-full px-3 py-2 border border-[#D1D5E8] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#687BED] focus:border-transparent"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#687BED] focus:border-transparent transition-colors duration-200"
+                    style={{
+                      backgroundColor: 'var(--background)',
+                      borderColor: 'var(--card-border)',
+                      color: 'var(--text-primary)'
+                    }}
                     placeholder="sk-..."
                     required
                   />
@@ -82,7 +91,11 @@ export default function ApiKeyModal({ isOpen, onClose, onSave }: ApiKeyModalProp
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+                    style={{
+                      color: 'var(--text-secondary)',
+                      backgroundColor: 'transparent'
+                    }}
                   >
                     Cancel
                   </button>

@@ -85,12 +85,54 @@ export default function RepoScanForm({
   const [isInvalid, setIsInvalid] = useState(false);
   const [isHelpHovered, setIsHelpHovered] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const typewriterTimeout = useRef<NodeJS.Timeout | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Check for dark mode on mount and listen for changes
+  React.useEffect(() => {
+    const updateDarkMode = () => {
+      // Check if document has dark class (this is set by Navbar)
+      const isDark = document.documentElement.classList.contains('dark');
+      setIsDarkMode(isDark);
+    };
+
+    // Initial check - wait a bit for Navbar to initialize
+    const initialCheck = () => {
+      updateDarkMode();
+    };
+
+    // Check immediately and also after a short delay to ensure Navbar has initialized
+    initialCheck();
+    const timeoutId = setTimeout(initialCheck, 100);
+
+    // Listen for storage changes (when dark mode is toggled in Navbar)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'darkMode') {
+        updateDarkMode();
+      }
+    };
+
+    // Listen for localStorage changes
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom events (for same-tab changes)
+    const handleDarkModeChange = () => {
+      updateDarkMode();
+    };
+
+    window.addEventListener('darkModeChange', handleDarkModeChange);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('darkModeChange', handleDarkModeChange);
+    };
   }, []);
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,7 +201,7 @@ export default function RepoScanForm({
       <div className="flex w-full items-center gap-1">
         <form ref={formRef} onSubmit={handleSubmit} className="flex-1 flex items-center">
           <div className="relative flex w-full items-center">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BABCCA]">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200" style={{ color: 'var(--text-muted)' }}>
               <Search size={20} />
             </span>
             <input
@@ -167,23 +209,54 @@ export default function RepoScanForm({
               value={repoUrl}
               onChange={handleUrlChange}
               placeholder="Enter a GitHub URL here…"
-              className={`flex-1 border rounded-2xl pr-32 pl-11 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-[#F3F5FF] border-[#D1D5E8] placeholder-[#BABCCA] text-base ${
-                isInvalid ? 'border-[#E3AAAA] text-[#E36363]' : 'text-[#202020]'
+              className={`flex-1 border rounded-2xl pr-32 pl-11 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-200 ${
+                isInvalid ? 'border-[#E3AAAA] text-[#E36363]' : ''
               }`}
-              style={{ paddingRight: loading ? '150px' : '110px' }}
+              style={{ 
+                paddingRight: loading ? '150px' : '110px',
+                backgroundColor: 'var(--card-bg)',
+                borderColor: isInvalid ? '#E3AAAA' : 'var(--card-border)',
+                color: isInvalid ? '#E36363' : 'var(--text-primary)',
+                '--tw-placeholder-opacity': '1',
+                '--tw-placeholder-color': 'var(--text-muted)'
+              } as React.CSSProperties}
               required
               disabled={isTyping}
             />
             <button
               type="submit"
               disabled={loading || isInvalid || isTyping}
-              className={`absolute right-1 inset-y-1 flex items-center gap-2 px-4 rounded-xl font-semibold cursor-pointer transition-all duration-300 ease-in-out ${
+              className={`absolute right-1 inset-y-1 flex items-center gap-2 px-4 rounded-xl font-semibold transition-all duration-300 ease-in-out ${
                 loading
-                  ? 'bg-[#DAE0FF] border border-[#D2D5E9] w-[140px] text-[#676F9B]'
+                  ? 'w-[140px] cursor-pointer'
                   : isInvalid
-                    ? 'bg-gray-200 border border-gray-300 w-[100px] text-gray-500'
-                    : 'bg-[#C2CBFF] border border-[#C0C5E6] w-[100px] text-[#202020] hover:bg-[#AAB8FF]'
+                    ? 'w-[100px] cursor-not-allowed'
+                    : 'w-[100px] cursor-pointer'
               }`}
+              style={{
+                backgroundColor: loading 
+                  ? (isDarkMode ? '#231A42' : '#F3F5FF')
+                  : isInvalid 
+                    ? (isDarkMode ? '#323234' : '#e5e7eb')
+                    : isDarkMode 
+                      ? '#231A42' 
+                      : '#C2CBFF',
+                borderColor: isDarkMode 
+                  ? (isInvalid ? '#4A4A4A' : '#30235D')
+                  : (isInvalid ? '#d1d5db' : '#C0C5E6'),
+                border: `1px solid ${isDarkMode 
+                  ? (isInvalid ? '#4A4A4A' : '#30235D')
+                  : (isInvalid ? '#d1d5db' : '#C0C5E6')}`,
+                color: loading 
+                  ? (isDarkMode ? '#A1A1AA' : '#676F9B')
+                  : isInvalid 
+                    ? (isDarkMode ? '#9CA3AF' : '#6b7280')
+                    : isDarkMode 
+                      ? '#C9C3D8' 
+                      : '#202020',
+                outline: 'none',
+                boxShadow: 'none'
+              }}
             >
               {loading ? (
                 <span
@@ -227,7 +300,9 @@ export default function RepoScanForm({
             <HelpCircle
               size={28}
               style={{
-                stroke: isHelpHovered ? '#6F80E3' : '#A1ACEB',
+                stroke: isHelpHovered 
+                  ? (isDarkMode ? '#342075' : '#6F80E3') 
+                  : (isDarkMode ? '#503C94' : '#A1ACEB'),
                 transition: 'stroke 0.2s',
                 cursor: 'pointer',
               }}
@@ -265,12 +340,12 @@ export default function RepoScanForm({
           bottom: 155%;
           left: 55%;
           transform: translateX(-50%) translateY(5px);
-          background: rgba(63, 64, 67);
-          color: #f3f5ff;
+          background: var(--card-bg);
+          color: var(--text-primary);
           padding: 2px 9px;
           border-radius: 9px;
           box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-          border: 1.2px solid rgba(110, 111, 114);
+          border: 1.2px solid var(--card-border);
           font-size: 0.82rem;
           font-weight: 500;
           white-space: nowrap;
@@ -300,8 +375,8 @@ export default function RepoScanForm({
           height: 0;
           border-left: 7px solid transparent;
           border-right: 7px solid transparent;
-          border-top: 7px solid rgba(63, 64, 67);
-          filter: drop-shadow(0 1px 0 rgba(110, 111, 114));
+          border-top: 7px solid var(--card-bg);
+          filter: drop-shadow(0 1px 0 var(--card-border));
         }
       `}</style>
     </div>

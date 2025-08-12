@@ -267,16 +267,24 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
       className="mt-6 mb-18 w-full flex flex-col items-center justify-center scroll-mt-26"
     >
       <h2
-        className="text-xl font-semibold mb-3 flex items-center gap-2 justify-center"
-        style={{ letterSpacing: '-0.025em', color: '#202020' }}
+        className="text-xl font-semibold mb-3 flex items-center gap-2 justify-center transition-colors duration-200"
+        style={{ 
+          letterSpacing: '-0.025em', 
+          color: 'var(--text-primary)' 
+        }}
       >
         <ShieldAlert size={22} className={getShieldColor(highestSeverity)} />
         Scan Result
       </h2>
       <div className="mb-3 text-center">
         <span
-          className="inline-block rounded-full px-4 py-1.5 text-sm font-medium border bg-[#f3f5ff80] border-[#d1d5e8b8] text-[#4C4E5B]"
-          style={{ letterSpacing: '-0.025em' }}
+          className="inline-block rounded-full px-4 py-1.5 text-sm font-medium border transition-colors duration-200"
+          style={{ 
+            letterSpacing: '-0.025em',
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)',
+            color: 'var(--text-secondary)'
+          }}
         >
           <strong>Language:</strong>{' '}
           {result.language === 'nodejs'
@@ -291,23 +299,39 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
           <div className="overflow-x-auto mt-2 w-full flex justify-center relative">
             <button
               onClick={() => setIsApiKeyModalOpen(true)}
-              className="absolute right-2 top-[8px] flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#687BED] hover:text-[#5A6BD9] transition-colors z-10 bg-white border border-[#D1D5E8] rounded-lg hover:bg-[#E3E7FE] cursor-pointer"
+              className="absolute right-2 top-[8px] flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors z-10 border rounded-lg cursor-pointer"
+              style={{
+                color: document.documentElement.classList.contains('dark') ? '#AFBAFF' : '#687BED',
+                backgroundColor: 'var(--card-bg)',
+                borderColor: 'var(--card-border)'
+              }}
             >
               <Plus size={16} />
               Add API Key
             </button>
-            <div className="w-full rounded-2xl border border-[#D1D5E8] bg-[#F3F5FF] p-2">
+            <div 
+              className="w-full rounded-2xl border p-2 transition-colors duration-200"
+              style={{
+                borderColor: 'var(--card-border)',
+                backgroundColor: 'var(--card-bg)'
+              }}
+            >
               <div className="w-full overflow-hidden">
                 <table
-                  className="w-full bg-transparent text-left table-fixed"
-                  style={{ letterSpacing: '-0.025em' }}
+                  className="w-full bg-transparent text-left table-fixed transition-colors duration-200"
+                  style={{ 
+                    letterSpacing: '-0.025em',
+                    color: 'var(--text-primary)'
+                  }}
                 >
                   <thead>
-                    <tr className="border-b border-gray-300">
+                    <tr className="border-b transition-colors duration-200" style={{ borderColor: 'var(--card-border)' }}>
                       <th
-                        className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white"
+                        className="px-3 py-2 font-bold cursor-pointer transition-all duration-200 hover:opacity-60"
                         style={{
                           width: result.language === 'python' ? '170px' : '120px',
+                          color: 'var(--text-primary)',
+                          backgroundColor: 'var(--card-bg)'
                         }}
                         onClick={() => handleSort('cve_id')}
                       >
@@ -317,8 +341,12 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                         </div>
                       </th>
                       <th
-                        className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white"
-                        style={{ width: '145px' }}
+                        className="px-3 py-2 font-bold cursor-pointer transition-all duration-200 hover:opacity-60"
+                        style={{ 
+                          width: '145px',
+                          color: 'var(--text-primary)',
+                          backgroundColor: 'var(--card-bg)'
+                        }}
                         onClick={() => handleSort('package')}
                       >
                         <div className="flex items-center gap-2">
@@ -327,8 +355,12 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                         </div>
                       </th>
                       <th
-                        className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white"
-                        style={{ width: '110px' }}
+                        className="px-3 py-2 font-bold cursor-pointer transition-all duration-200 hover:opacity-60"
+                        style={{ 
+                          width: '110px',
+                          color: 'var(--text-primary)',
+                          backgroundColor: 'var(--card-bg)'
+                        }}
                         onClick={() => handleSort('severity')}
                       >
                         <div className="flex items-center gap-2">
@@ -337,8 +369,12 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                         </div>
                       </th>
                       <th
-                        className="px-3 py-2 font-bold cursor-pointer transition-colors hover:bg-gradient-to-b hover:from-[#F3F5FF] hover:to-white"
-                        style={{ width: '400px' }}
+                        className="px-3 py-2 font-bold cursor-pointer transition-all duration-200 hover:opacity-60"
+                        style={{ 
+                          width: '400px',
+                          color: 'var(--text-primary)',
+                          backgroundColor: 'var(--card-bg)'
+                        }}
                         onClick={() => handleSort('description')}
                       >
                         <div className="flex items-center gap-2">
@@ -357,14 +393,22 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                             expandedCveId === vuln.cve_id
                               ? ''
                               : index < sortedResults.length - 1
-                                ? 'border-b border-gray-300'
+                                ? 'border-b transition-colors duration-200'
                                 : ''
                           }
+                          style={{
+                            borderColor: expandedCveId === vuln.cve_id
+                              ? 'transparent'
+                              : index < sortedResults.length - 1
+                                ? 'var(--card-border)'
+                                : 'transparent'
+                          }}
                         >
                           <td
-                            className="px-3 py-2 font-semibold text-blue-700 align-top"
+                            className="px-3 py-2 font-semibold align-top transition-colors duration-200"
                             style={{
                               width: result.language === 'python' ? '170px' : '120px',
+                              color: document.documentElement.classList.contains('dark') ? '#AFBAFF' : '#687BED'
                             }}
                           >
                             {vuln.references && vuln.references.length > 0 ? (
@@ -378,13 +422,13 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                                 <ArrowUpRight
                                   size={16}
                                   className="mr-1 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1"
-                                  color="#687BED"
+                                  color={document.documentElement.classList.contains('dark') ? '#AFBAFF' : '#687BED'}
                                 />
                                 <span
                                   style={{
                                     fontFamily: 'IBM Plex Mono, monospace',
                                     fontSize: '0.93em',
-                                    color: '#687BED',
+                                    color: document.documentElement.classList.contains('dark') ? '#AFBAFF' : '#687BED',
                                   }}
                                 >
                                   {vuln.cve_id}
@@ -403,42 +447,59 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                             )}
                           </td>
                           <td
-                            className="px-3 py-2 align-top"
+                            className="px-3 py-2 align-top transition-colors duration-200"
                             style={{
                               width: '145px',
                               wordBreak: 'break-word',
                               hyphens: 'auto',
                               whiteSpace: 'normal',
+                              color: 'var(--text-primary)'
                             }}
                           >
                             {vuln.package}
                           </td>
                           <td className="px-3 py-2 align-top" style={{ width: '110px' }}>
                             <span
-                              className={`inline-block rounded-full px-3 py-1 text-xs font-medium border
-                                ${
-                                  vuln.severity === 'critical'
-                                    ? 'bg-red-100 text-red-700 border-red-300'
-                                    : vuln.severity === 'high'
-                                      ? 'bg-red-50 text-red-500 border-red-200'
-                                      : vuln.severity === 'moderate'
-                                        ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
-                                        : 'bg-gray-100 text-gray-700 border-gray-300'
-                                }
-                              `}
-                              style={{ letterSpacing: '-0.025em' }}
+                              className={`inline-block rounded-full px-3 py-1 text-xs font-medium border transition-colors duration-200`}
+                              style={{ 
+                                letterSpacing: '-0.025em',
+                                ...(vuln.severity === 'critical'
+                                  ? document.documentElement.classList.contains('dark')
+                                    ? { backgroundColor: '#370E0E', color: '#FECACA', borderColor: '#471919' }
+                                    : { backgroundColor: '#FEE2E2', color: '#DC2626', borderColor: '#FCA5A5' }
+                                  : vuln.severity === 'high'
+                                    ? document.documentElement.classList.contains('dark')
+                                      ? { backgroundColor: '#371C1C', color: '#FCA5A5', borderColor: '#4B2B2B' }
+                                      : { backgroundColor: '#FEF2F2', color: '#EF4444', borderColor: '#FECACA' }
+                                    : vuln.severity === 'moderate'
+                                      ? document.documentElement.classList.contains('dark')
+                                        ? { backgroundColor: '#392A13', color: '#FED7AA', borderColor: '#513C1B' }
+                                        : { backgroundColor: '#FFFBEB', color: '#D97706', borderColor: '#FDE68A' }
+                                      : document.documentElement.classList.contains('dark')
+                                        ? { backgroundColor: '#27303F', color: '#D1D5DB', borderColor: '#3A4351' }
+                                        : { backgroundColor: '#F3F4F6', color: '#374151', borderColor: '#D1D5DB' }
+                                )
+                              }}
                             >
                               {vuln.severity}
                             </span>
                           </td>
-                          <td className="px-3 py-2 text-sm align-top" style={{ width: '400px' }}>
+                          <td 
+                            className="px-3 py-2 text-sm align-top transition-colors duration-200" 
+                            style={{ 
+                              width: '400px',
+                              color: 'var(--text-primary)'
+                            }}
+                          >
                             {vuln.description}
                           </td>
                           <td style={{ width: '48px' }} className="px-3 py-2 align-top">
                             <button
                               className={`p-1.5 rounded-lg transition-colors ${
                                 vuln.references && vuln.references.length > 0
-                                  ? 'hover:bg-[#E3E7FE] cursor-pointer'
+                                  ? document.documentElement.classList.contains('dark') 
+                                    ? 'hover:bg-[#101013] cursor-pointer'
+                                    : 'hover:bg-[#E3E7FE] cursor-pointer'
                                   : 'cursor-not-allowed opacity-40'
                               }`}
                               disabled={!vuln.references || vuln.references.length === 0}
@@ -448,7 +509,7 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                                 size={18}
                                 className={`${
                                   vuln.references && vuln.references.length > 0
-                                    ? 'text-[#687BED]'
+                                    ? document.documentElement.classList.contains('dark') ? 'text-[#AFBAFF]' : 'text-[#687BED]'
                                     : 'text-gray-400'
                                 }`}
                               />
@@ -458,7 +519,7 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                         <AnimatePresence>
                           {expandedCveId === vuln.cve_id && (
                             <tr>
-                              <td colSpan={5} className="px-3 pt-0 pb-4 border-b border-gray-300">
+                              <td colSpan={5} className="px-3 pt-0 pb-4 border-b transition-colors duration-200" style={{ borderColor: 'var(--card-border)' }}>
                                 <motion.div
                                   key="expandable"
                                   initial={{ height: 0, opacity: 0 }}
@@ -472,18 +533,26 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                                     animate={{ y: 0, opacity: 1 }}
                                     exit={{ y: -10, opacity: 0 }}
                                     transition={{ delay: 0.1, duration: 0.2 }}
-                                    className="bg-white rounded-xl border border-[#D1D5E8] p-4"
+                                    className="rounded-xl border p-4 transition-colors duration-200"
+                                    style={{
+                                      backgroundColor: 'var(--card-bg)',
+                                      borderColor: 'var(--card-border)'
+                                    }}
                                   >
                                     <div className="flex items-center gap-2 mb-3">
-                                      <Sparkles size={18} className="text-[#687BED]" />
-                                      <h3 className="font-semibold text-[#202020]">Fix with AI</h3>
+                                      <Sparkles 
+                                        size={18} 
+                                        className={document.documentElement.classList.contains('dark') ? 'text-[#AFBAFF]' : 'text-[#687BED]'} 
+                                      />
+                                      <h3 className="font-semibold transition-colors duration-200" style={{ color: 'var(--text-primary)' }}>Fix with AI</h3>
                                     </div>
                                     <AnimatePresence mode="wait">
                                       {isLoading ? (
                                         <motion.div
                                           key="loading"
                                           {...fadeInAnimation}
-                                          className="flex items-center gap-2 text-[#646464]"
+                                          className="flex items-center gap-2 transition-colors duration-200"
+                                          style={{ color: 'var(--text-secondary)' }}
                                         >
                                           <Loader2 size={16} className="animate-spin" />
                                           Generating fix suggestions...
@@ -495,23 +564,24 @@ export default function ScanResultTable({ result }: ScanResultTableProps) {
                                           className="space-y-3"
                                         >
                                           <div>
-                                            <h4 className="font-medium text-[#202020] mb-1">
+                                            <h4 className="font-medium mb-1 transition-colors duration-200" style={{ color: 'var(--text-primary)' }}>
                                               Fixes:
                                             </h4>
-                                            <p className="text-[#646464]">{aiFix.fixes}</p>
+                                            <p className="transition-colors duration-200" style={{ color: 'var(--text-secondary)' }}>{aiFix.fixes}</p>
                                           </div>
                                           <div>
-                                            <h4 className="font-medium text-[#202020] mb-1">
+                                            <h4 className="font-medium mb-1 transition-colors duration-200" style={{ color: 'var(--text-primary)' }}>
                                               Workarounds:
                                             </h4>
-                                            <p className="text-[#646464]">{aiFix.workarounds}</p>
+                                            <p className="transition-colors duration-200" style={{ color: 'var(--text-secondary)' }}>{aiFix.workarounds}</p>
                                           </div>
                                         </motion.div>
                                       ) : (
                                         <motion.p
                                           key="empty"
                                           {...fadeInAnimation}
-                                          className="text-[#646464]"
+                                          className="transition-colors duration-200"
+                                          style={{ color: 'var(--text-secondary)' }}
                                         >
                                           Click the sparkle icon to generate AI fix suggestions.
                                         </motion.p>

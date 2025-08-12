@@ -11,21 +11,53 @@
   --color-foreground: var(--foreground);
   --font-mono: var(--font-geist-mono);
   --background-color: #e3e7fe;
+  --navbar-bg: rgba(255, 255, 255, 0.1);
+  --text-primary: #202020;
+  --text-secondary: #646464;
+  --text-muted: #B5B5C8;
+  --border-color: transparent;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --button-bg: #D7DCFF;
+  --button-border: #C0C5E6;
+  --button-text: #202020;
+}
+
+.dark {
+  --background: #0B0B0B;
+  --foreground: #ededed;
+  --background-color: #0B0B0B;
+  --navbar-bg: rgba(0, 0, 0, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --border-color: #27272a;
+  --card-bg: #18181b;
+  --card-border: #27272a;
+  --button-bg: #2D3748;
+  --button-border: #4A5568;
+  --button-text: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0B0B0B;
     --foreground: #ededed;
   }
 }
 
 html,
 body {
-  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #e3e7fe 50%, #e3e7fe 100%);
-  color: #202020;
+  background: linear-gradient(to bottom, var(--background) 0%, var(--background) 50%, var(--background-color) 50%, var(--background-color) 100%);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dark html,
+.dark body {
+  background: linear-gradient(to bottom, var(--background) 0%, var(--background) 50%, var(--background-color) 50%, var(--background-color) 100%);
 }
