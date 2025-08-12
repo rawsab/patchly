@@ -47,6 +47,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const exampleDelayRef = useRef(false);
 
   // Check for dark mode on mount and listen for changes
@@ -86,6 +87,15 @@ export default function Home() {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('darkModeChange', handleDarkModeChange);
     };
+  }, []);
+
+  // Trigger image fade-in after a short delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setImageLoaded(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -167,12 +177,15 @@ export default function Home() {
     <div className="relative min-h-screen overflow-x-hidden transition-colors duration-200" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-primary)' }}>
       <Navbar />
       {/* Background image at the top */}
-      <img
+      <motion.img
         src={isDarkMode ? "/background/header_dark.png" : "/background/header_light.png"}
         alt=""
         aria-hidden
         className="pointer-events-none select-none absolute top-0 left-0 w-full z-0"
         style={{ objectFit: 'cover' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: imageLoaded ? 1 : 0 }}
+        transition={{ duration: 0.8, ease: 'easeInOut' }}
       />
       <div className="w-full max-w-[952px] p-6 flex flex-col items-center justify-center mx-auto relative z-10 pt-20">
         <div className={`w-full${!result ? ' flex flex-col justify-center min-h-[60vh]' : ''}`}>
